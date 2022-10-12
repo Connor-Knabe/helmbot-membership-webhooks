@@ -1,0 +1,5 @@
+packages:
+  - name: helmbot-membership-webhooks
+    actions:
+      - name: helmbot-membership-webhooks
+        runtime: nodejs:default

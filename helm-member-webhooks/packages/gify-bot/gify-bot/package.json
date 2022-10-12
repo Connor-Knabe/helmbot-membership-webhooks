@@ -1,0 +1,13 @@
+{
+  "name": "helmbot-membership-webhooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "helmbot-membership-webhooks.js",
+  "dependencies": {
+    "qrcode": "^1.3.2",
+    "qs":"6.11.0",
+    "got":"^11",
+    "@giphy/js-fetch-api":"4.4.0"
+  },
+  "devDependencies": {}
+}
