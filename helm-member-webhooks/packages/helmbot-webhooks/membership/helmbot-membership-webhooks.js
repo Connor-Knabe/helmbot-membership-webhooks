@@ -17,6 +17,10 @@ async function customerFloatCheckout(params) {
     const customerId = params["customer_id"];
     const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
 
+    // creds.customerId =  params["customer_id"];
+    // creds.customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;;
+
+    //put this message in creds file for customization
     var slackMessage = `*Reminder for:*  ${checkedOutBy} you checked out ${customerNameAndUrl}.  \n*Please add notes to ${customerNameAndUrl}'s profile:*\n • Why they float?\n• Did you present membership opportunity?\n• If they didn't sign up why not?\n\nFeel free to start a thread on this post to brainstorm tips for next time.`;
     await got.post(creds.slackWebhookURL, {
         json: {
