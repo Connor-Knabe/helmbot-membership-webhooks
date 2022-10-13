@@ -6,12 +6,12 @@ async function main(params) {
     if(params["event_type"] == "membership-range-begun" && params["membership_type_name"] != undefined){
         return await membershipSold(params);
     }
-    if(params["event_type"] == "reservation-checkout" && params["checkout_by_user_name"] != undefined && params["service_type_title"] == "Float"){
-        return await customerFloatCheckout(params);
+    if(params["event_type"] == "reservation-checkout" && params["checkout_by_user_name"] != undefined && params["service_type_title"] == "Float" && params["customer_past_reservation_count"] == 0){
+        return await customerFirstFloatCheckout(params);
     }
 }
 
-async function customerFloatCheckout(params) {
+async function customerFirstFloatCheckout(params) {
     const customerName = params["customer_name"];
     const checkedOutBy = getEmployee(params);
     const customerId = params["customer_id"];
@@ -90,8 +90,8 @@ async function membershipSold(params) {
 
 
 function getEmployee(params){
-    const soldByUsername = params["sold_by_user_name"];
-    const checkoutByUsername = params["checkout_by_user_name"];
+    const soldByUsername = params["sold_by_user_id"];
+    const checkoutByUsername = params["checkout_by_user_id"];
     const employee = soldByUsername == undefined ? creds.helmToSlackNames[checkoutByUsername] : creds.helmToSlackNames[soldByUsername];
     return employee;
 }
