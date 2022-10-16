@@ -19,7 +19,7 @@ async function main(params) {
         return await customerFirstFloatCheckout(params);
     }
 
-    if(params["event_type"] == "sale-closed" && params["sold_online"] && params["service_type_title"] == "Float"){
+    if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"].length > 9){
         return await onlineSale(params);
     }
     
@@ -48,20 +48,21 @@ async function customerFirstFloatCheckout(params) {
 
 }
 
+
 async function onlineSale(params) {
 
     const customerName = params["customer_name"];
     const customerPhoneNumber = params["customer_phone"];
     const customerId = params["customer_id"];
+    const pastReservationCount = params["customer_past_reservation_count"]
     const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
+    // const serviceTitle = params["service_title"];
 
-    var slackMessage = `${customerNameAndUrl} has purchased a session! Please call them at ${customerPhoneNumber} ASAP to see if they have any questions.`;
-    var slackMessage = "Check this box when you've called the customer";
-
-    await got.post(slackUrl, {
-        json: {
-            text: getSlackMessage(slackMessage,checkboxText)
-        }
+    var slackMessage = `${customerNameAndUrl} has purchased a session! Please call them at ${customerPhoneNumber} ASAP to see if they have any questions.  They have had ${pastReservationCount} appointments with us.`;
+    var checkboxText = "Check this box when you've called the customer";
+    
+    await got.post(creds.slackWebhookSalesUrl, {
+        json: getSlackMessage(slackMessage,checkboxText)
     });
     
     return {
