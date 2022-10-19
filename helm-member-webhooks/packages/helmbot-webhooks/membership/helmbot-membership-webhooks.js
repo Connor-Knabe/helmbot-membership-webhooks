@@ -22,7 +22,6 @@ async function main(params) {
     if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"].length > 9){
         return await onlineSale(params);
     }
-    
 
 }
 
@@ -52,9 +51,10 @@ async function customerFirstFloatCheckout(params) {
 async function onlineSale(params) {
 
     const customerName = params["customer_name"];
-    const customerPhoneNumber = params["customer_phone"];
+    var customerPhoneNumber = params["customer_phone"];
     const customerId = params["customer_id"];
     const pastReservationCount = params["customer_past_reservation_count"]
+    customerPhoneNumber = `<tel:${customerPhoneNumber}|${customerPhoneNumber}>`
     const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
     // const serviceTitle = params["service_title"];
 
