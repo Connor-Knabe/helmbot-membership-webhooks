@@ -1,10 +1,12 @@
 const got = require("got");
 const creds = require("./creds");
+const msg = require("./customMessages");
+
 
 var slackUrl = creds.slackWebhookURL;
 
 (()=>{
-    console.log(creds.getSlackMessage())
+    console.log(msg.getSlackMessage())
 }
 )()
 
@@ -39,12 +41,12 @@ async function main(params) {
 async function customerFirstFloatCheckout(params) {
     const customerName = params["customer_name"];
     const checkedOutBy = getEmployee(params);
-    creds.setCheckedOutBy(checkedOutBy);
-    creds.setCustomerName(customerName);
+    msg.setCheckedOutBy(checkedOutBy);
+    msg.setCustomerName(customerName);
     const customerId = params["customer_id"];
-    creds.setCustomerId(customerId);
+    msg.setCustomerId(customerId);
     await got.post(slackUrl, {
-        json: formatSlackMessage(creds.getSlackMessage,creds.getCheckboxText)
+        json: formatSlackMessage(msg.getSlackMessage,msg.getCheckboxText)
     });
 
     return {
@@ -61,20 +63,18 @@ async function onlineSale(params) {
     var customerPhoneNumber = params["customer_phone"];
     const customerId = params["customer_id"];
     const pastReservationCount = params["customer_past_reservation_count"];
-    creds.setPastReservationCount(pastReservationCount);
+    msg.setPastReservationCount(pastReservationCount);
     customerPhoneNumber = `<tel:${customerPhoneNumber}|${customerPhoneNumber}>`;
-    creds.setCustomerPhoneNumber(customerPhoneNumber);
-    const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
-    creds.setCustomerNameAndUrl(customerNameAndUrl);
+    msg.setCustomerPhoneNumber(customerPhoneNumber);
+    const customerNameAndUrl = `<${msg.helmbotUsersUrl}${customerId}| ${customerName}>`;
+    msg.setCustomerNameAndUrl(customerNameAndUrl);
 
 
     // const serviceTitle = params["service_title"];
 
 
-
-
     await got.post(creds.slackWebhookSalesUrl, {
-        json: formatSlackMessage(creds.getSaleSlackMessage,creds.getSaleCheckBoxText)
+        json: formatSlackMessage(msg.getSaleSlackMessage,msg.getSaleCheckBoxText)
     });
     
     return {
@@ -84,8 +84,6 @@ async function onlineSale(params) {
     };
 }
 
-
-
 async function membershipSold(params) {
     const membershipType = params["membership_type_name"];
     const soldBy = getEmployee(params);
@@ -94,7 +92,6 @@ async function membershipSold(params) {
 
     await got.post(slackUrl, {
         json: {
-            channel: creds.slackChannelID,
             text: slackMessage
         }
     });
@@ -102,7 +99,6 @@ async function membershipSold(params) {
 
     await got.post(slackUrl, {
         json: {
-            channel: creds.slackChannelID,
             text: giphy?.data?.url
         }
     });
