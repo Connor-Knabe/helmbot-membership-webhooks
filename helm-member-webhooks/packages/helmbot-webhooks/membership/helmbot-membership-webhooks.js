@@ -1,8 +1,6 @@
 const got = require("got");
 const creds = require("./creds");
 const msg = require("./customMessages");
-
-
 var slackUrl = creds.slackWebhookURL;
 
 (()=>{
