@@ -23,6 +23,12 @@ async function main(params) {
         return await onlineSale(params);
     }
 
+    return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: {"Data":"N/a"}
+    };
+
 }
 
 async function customerFirstFloatCheckout(params) {
@@ -49,7 +55,6 @@ async function customerFirstFloatCheckout(params) {
 
 
 async function onlineSale(params) {
-
     const customerName = params["customer_name"];
     var customerPhoneNumber = params["customer_phone"];
     const customerId = params["customer_id"];
@@ -57,6 +62,7 @@ async function onlineSale(params) {
     customerPhoneNumber = `<tel:${customerPhoneNumber}|${customerPhoneNumber}>`
     const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
     // const serviceTitle = params["service_title"];
+
 
     var slackMessage = `${customerNameAndUrl} has purchased a session! Please call them at ${customerPhoneNumber} ASAP to see if they have any questions.  They have had ${pastReservationCount} appointments with us.`;
     var checkboxText = "Check this box when you've called the customer";
