@@ -3,6 +3,11 @@ const creds = require("./creds");
 
 var slackUrl = creds.slackWebhookURL;
 
+(()=>{
+    console.log(creds.getSlackMessage())
+}
+)()
+
 async function main(params) {
     console.log('params b4',params);
 
@@ -32,17 +37,14 @@ async function main(params) {
 }
 
 async function customerFirstFloatCheckout(params) {
-
     const customerName = params["customer_name"];
     const checkedOutBy = getEmployee(params);
+    creds.setCheckedOutBy(checkedOutBy);
+    creds.setCustomerName(customerName);
     const customerId = params["customer_id"];
-    const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
-
-    //put this message in creds file for customization
-    var slackMessage = `*Reminder for:*  ${checkedOutBy} you checked out ${customerNameAndUrl} for their first float.  \n*Please add notes to ${customerNameAndUrl}'s profile:*\n • Why they float?\n• Did you present membership opportunity?\n• If they didn't sign up why not?\n\nFeel free to start a thread on this post to brainstorm tips for next time.`;
-    var checkboxText = "*Check this box when you've added notes to helm*";
+    creds.setCustomerId(customerId);
     await got.post(slackUrl, {
-        json: getSlackMessage(slackMessage,checkboxText)
+        json: formatSlackMessage(creds.getSlackMessage,creds.getCheckboxText)
     });
 
     return {
@@ -58,17 +60,21 @@ async function onlineSale(params) {
     const customerName = params["customer_name"];
     var customerPhoneNumber = params["customer_phone"];
     const customerId = params["customer_id"];
-    const pastReservationCount = params["customer_past_reservation_count"]
-    customerPhoneNumber = `<tel:${customerPhoneNumber}|${customerPhoneNumber}>`
+    const pastReservationCount = params["customer_past_reservation_count"];
+    creds.setPastReservationCount(pastReservationCount);
+    customerPhoneNumber = `<tel:${customerPhoneNumber}|${customerPhoneNumber}>`;
+    creds.setCustomerPhoneNumber(customerPhoneNumber);
     const customerNameAndUrl = `<${creds.helmbotUsersUrl}${customerId}| ${customerName}>`;
+    creds.setCustomerNameAndUrl(customerNameAndUrl);
+
+
     // const serviceTitle = params["service_title"];
 
 
-    var slackMessage = `${customerNameAndUrl} has purchased a session! Please call them at ${customerPhoneNumber} ASAP to see if they have any questions.  They have had ${pastReservationCount} appointments with us.`;
-    var checkboxText = "Check this box when you've called the customer";
-    
+
+
     await got.post(creds.slackWebhookSalesUrl, {
-        json: getSlackMessage(slackMessage,checkboxText)
+        json: formatSlackMessage(creds.getSaleSlackMessage,creds.getSaleCheckBoxText)
     });
     
     return {
@@ -115,7 +121,7 @@ function getEmployee(params){
     return employee;
 }
 
-function getSlackMessage(message,checkboxText){
+function formatSlackMessage(message,checkboxText){
     return {
         blocks: [
             {
