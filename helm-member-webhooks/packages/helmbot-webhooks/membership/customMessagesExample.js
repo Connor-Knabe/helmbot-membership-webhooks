@@ -1,3 +1,5 @@
+module.exports.giphyTag = 'awesome';
+
 module.exports.customerName = 'n/a';
 module.exports.setCustomerName = (customerName)=>{
     this.customerName = customerName;

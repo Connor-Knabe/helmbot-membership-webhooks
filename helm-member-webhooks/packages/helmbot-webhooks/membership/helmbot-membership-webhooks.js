@@ -84,16 +84,21 @@ async function onlineSale(params) {
 
 async function membershipSold(params) {
     const membershipType = params["membership_type_name"];
+    var activeMemberCount = params["location_memberships_active_count"];
+    activeMemberCount = activeMemberCount - params["location_memberships_active_needing_card_count"];
+    
+
+    
     const soldBy = getEmployee(params);
 
-    var slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!";
+    var slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!  Membership count is: " +activeMemberCount+"";
 
     await got.post(slackUrl, {
         json: {
             text: slackMessage
         }
     });
-    const giphy = await got('https://api.giphy.com/v1/gifs/random?api_key='+creds.giphyAPIKey+'&tag=awesome').json();
+    const giphy = await got('https://api.giphy.com/v1/gifs/random?api_key='+creds.giphyAPIKey+'&tag='+msg.giphyTag).json();
 
     await got.post(slackUrl, {
         json: {
