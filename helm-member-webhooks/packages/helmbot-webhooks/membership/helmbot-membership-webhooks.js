@@ -24,7 +24,7 @@ async function main(params) {
         return await customerFirstFloatCheckout(params);
     }
 
-    if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"].length > 9){
+    if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"].length > 9 && params["customer_past_reservation_count"] == 0){
         return await onlineSale(params);
     }
 
@@ -86,9 +86,7 @@ async function membershipSold(params) {
     const membershipType = params["membership_type_name"];
     var activeMemberCount = params["location_memberships_active_count"];
     activeMemberCount = activeMemberCount - params["location_memberships_active_needing_card_count"];
-    
-
-    
+        
     const soldBy = getEmployee(params);
 
     var slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!  Membership count is: " +activeMemberCount+"";
