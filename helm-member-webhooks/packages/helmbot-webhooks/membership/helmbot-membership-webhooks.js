@@ -1,12 +1,18 @@
 const got = require("got");
 const creds = require("./creds");
-const msg = require("./customMessages");
+const customMessage = require("./customMessages");
 var slackUrl = creds.slackWebhookURL;
 
-(()=>{
-    console.log(msg.getSlackMessage())
-}
-)()
+//DEBUG
+
+// var params = {"checkout_by_user_id":"1398935","event_type":"reservation-checkout","service_type_title":"Float", "customer_past_reservation_count":0,"checkout_by_user_name":"connor","customer_name":"BOB","sold_by_user_id":1398935,"checkout_by_user_id": 1398935}
+// main(params);
+// (()=>{
+//     console.log(customMessage.getSlackMessage());
+// })()
+
+
+
 
 async function main(params) {
     console.log('params b4',params);
@@ -15,16 +21,18 @@ async function main(params) {
     if(params["checkout_by_user_id"] == "1398935" || params["sold_by_user_id"] == "1398935"){
         slackUrl = creds.slackDebugWebhookURL;
     }
-
-    console.log('params',params);
     if(params["event_type"] == "membership-range-begun" && params["membership_type_name"] != undefined){
+        console.log("membership sold");
         return await membershipSold(params);
     }
+
     if(params["event_type"] == "reservation-checkout" && params["checkout_by_user_name"] != undefined && params["service_type_title"] == "Float" && params["customer_past_reservation_count"] == 0){
+        console.log("first timer checkout");
         return await customerFirstFloatCheckout(params);
     }
 
     if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"].length > 9 && params["customer_past_reservation_count"] == 0){
+        console.log("new first timer sale");
         return await onlineSale(params);
     }
 
@@ -33,20 +41,21 @@ async function main(params) {
         headers: { 'Content-Type': 'application/json' },
         body: {"Data":"N/a"}
     };
-
 }
 
 async function customerFirstFloatCheckout(params) {
     const customerName = params["customer_name"];
     const checkedOutBy = getEmployee(params);
-    msg.setCheckedOutBy(checkedOutBy);
-    msg.setCustomerName(customerName);
+    customMessage.setCheckedOutBy(checkedOutBy);
+    customMessage.setCustomerName(customerName);
     const customerId = params["customer_id"];
-    msg.setCustomerId(customerId);
+    customMessage.setCustomerId(customerId);
+    var slackMessage = customMessage.getSlackMessage();
+    var checkboxText = customMessage.getCheckBoxText();
+    var msg = formatSlackMessage(slackMessage,checkboxText);
     await got.post(slackUrl, {
-        json: formatSlackMessage(msg.getSlackMessage,msg.getCheckboxText)
+        json: msg
     });
-
     return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -61,18 +70,18 @@ async function onlineSale(params) {
     var customerPhoneNumber = params["customer_phone"];
     const customerId = params["customer_id"];
     const pastReservationCount = params["customer_past_reservation_count"];
-    msg.setPastReservationCount(pastReservationCount);
+    customMessage.setPastReservationCount(pastReservationCount);
     customerPhoneNumber = `<tel:${customerPhoneNumber}|${customerPhoneNumber}>`;
-    msg.setCustomerPhoneNumber(customerPhoneNumber);
-    const customerNameAndUrl = `<${msg.helmbotUsersUrl}${customerId}| ${customerName}>`;
-    msg.setCustomerNameAndUrl(customerNameAndUrl);
+    customMessage.setCustomerPhoneNumber(customerPhoneNumber);
+    const customerNameAndUrl = `<${customMessage.helmbotUsersUrl}${customerId}| ${customerName}>`;
+    customMessage.setCustomerNameAndUrl(customerNameAndUrl);
 
 
     // const serviceTitle = params["service_title"];
 
 
     await got.post(creds.slackWebhookSalesUrl, {
-        json: formatSlackMessage(msg.getSaleSlackMessage,msg.getSaleCheckBoxText)
+        json: formatSlackMessage(customMessage.getSaleSlackMessage(),customMessage.getSaleCheckBoxText())
     });
     
     return {
@@ -96,7 +105,7 @@ async function membershipSold(params) {
             text: slackMessage
         }
     });
-    const giphy = await got('https://api.giphy.com/v1/gifs/random?api_key='+creds.giphyAPIKey+'&tag='+msg.giphyTag).json();
+    const giphy = await got('https://api.giphy.com/v1/gifs/random?api_key='+creds.giphyAPIKey+'&tag='+customMessage.giphyTag).json();
 
     await got.post(slackUrl, {
         json: {
@@ -119,6 +128,7 @@ function getEmployee(params){
 }
 
 function formatSlackMessage(message,checkboxText){
+    console.log('mSGG',message);
     return {
         blocks: [
             {

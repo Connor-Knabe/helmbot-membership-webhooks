@@ -19,6 +19,9 @@ module.exports.getCheckBoxText = ()=> {
     return "*Check this box when you've added notes to helm*";
 }
 
+module.exports.helmbotUsersUrl = "https://*.floathelm.com/users/";
+
+
 module.exports.getSlackMessage = ()=> {
     return `*Reminder for:*  ${this.checkedOutBy} you checked out <${this.helmbotUsersUrl}${this.customerId}| ${this.customerName}> for their first float.  \n*Please add notes to <${this.helmbotUsersUrl}${this.customerId}| ${this.customerName}>'s profile:*\n • Why they float?\n• Did you present membership opportunity?\n• If they didn't sign up why not?\n\nFeel free to start a thread on this post to brainstorm tips for next time.`;
 }
