@@ -98,6 +98,7 @@ async function membershipSold(params) {
         
     const soldBy = getEmployee(params);
 
+    //make this using markdown and add new line
     var slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!  Membership count is: " +activeMemberCount+"";
 
     await got.post(slackUrl, {

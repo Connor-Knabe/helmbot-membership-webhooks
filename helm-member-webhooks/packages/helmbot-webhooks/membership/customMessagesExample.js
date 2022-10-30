@@ -46,5 +46,5 @@ module.exports.setCustomerNameAndUrl = (customerNameAndUrl)=>{
 };
 
 module.exports.getSaleSlackMessage = ()=> {
-    return `${customerNameAndUrl} has purchased a session! Please call them at ${customerPhoneNumber} ASAP to see if they have any questions.  They have had ${pastReservationCount} appointments with us.`;
+    return `${this.customerNameAndUrl} has purchased a session! Please call them at ${this.customerPhoneNumber} ASAP to see if they have any questions.  They have had ${this.pastReservationCount} appointments with us.`;
 }
