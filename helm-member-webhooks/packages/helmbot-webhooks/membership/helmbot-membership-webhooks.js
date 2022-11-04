@@ -31,7 +31,7 @@ async function main(params) {
         return await customerFirstFloatCheckout(params);
     }
 
-    if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"].length > 9 && params["customer_past_reservation_count"] == 0){
+    if(params["event_type"] == "sale-closed" && params["sold_online"] && params["customer_phone"]?.length > 9 && params["customer_past_reservation_count"] == 0){
         console.log("new first timer sale");
         return await onlineSale(params);
     }
