@@ -21,12 +21,12 @@ async function main(params) {
     if(params["checkout_by_user_id"] == "1398935" || params["sold_by_user_id"] == "1398935"){
         slackUrl = creds.slackDebugWebhookURL;
     }
-    if(params["event_type"] == "membership-range-begun" && params["membership_type_name"] != undefined){
+    if(params["event_type"] == "membership-range-begun" && params["membership_type_name"] != undefined && params["period_number"] == 1){
         console.log("membership sold");
         return await membershipSold(params);
     }
 
-    if(params["event_type"] == "reservation-checkout" && params["checkout_by_user_name"] != undefined && params["service_type_title"] == "Float" && params["customer_past_reservation_count"] == 0){
+    if(params["event_type"] == "reservation-checkout" && params["checkout_by_user_name"] != undefined && params["service_type_title"] == "Float" && params["appointment_number_this_service_type"] == 0){
         console.log("first timer checkout");
         return await customerFirstFloatCheckout(params);
     }
@@ -79,7 +79,6 @@ async function onlineSale(params) {
 
     // const serviceTitle = params["service_title"];
 
-
     await got.post(creds.slackWebhookSalesUrl, {
         json: formatSlackMessage(customMessage.getSaleSlackMessage(),customMessage.getSaleCheckBoxText())
     });
@@ -95,11 +94,15 @@ async function membershipSold(params) {
     const membershipType = params["membership_type_name"];
     var activeMemberCount = params["location_memberships_active_count"];
     activeMemberCount = activeMemberCount - params["location_memberships_active_needing_card_count"];
-        
-    const soldBy = getEmployee(params);
+    var slackMessage = "Sweeeet a "+ membershipType + " was sold online!  Membership count is: " +activeMemberCount+"";
+
+    if(params["sold_by_user_id"]){
+        const soldBy = getEmployee(params);
+        slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!  Membership count is: " +activeMemberCount+"";
+    }
 
     //make this using markdown and add new line
-    var slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!  Membership count is: " +activeMemberCount+"";
+    
 
     await got.post(slackUrl, {
         json: {
