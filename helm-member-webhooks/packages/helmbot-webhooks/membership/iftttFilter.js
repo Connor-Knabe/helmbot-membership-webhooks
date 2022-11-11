@@ -5,7 +5,7 @@ const eventType = data["event_type"];
 const membershipTypeName = data["membership_type_name"] != undefined ? data["membership_type_name"].toLowerCase() : "";
 const employeeName = data["checkout_by_user_name"] != undefined ? data["checkout_by_user_name"] : data["sold_by_user_name"];
 const customerName = data["customer_name"] != undefined ? data["customer_name"] : "N/a";
-const pastReservationCount = data["customer_past_reservation_count"] != undefined ? data["customer_past_reservation_count"] : "N/a";
+const pastReservationCount = data["appointment_number_this_service_type"] != undefined ? data["appointment_number_this_service_type"] : "N/a";
 const endsAt = data["ends_at"] != undefined ? data["ends_at"] : "N/a";
 const activeMembershipCount = data["location_memberships_active_count"] != undefined ? data["location_memberships_active_count"] : 0;
 const membershipsNeedingCardCount = data["location_memberships_active_needing_card_count"] != undefined ? data["location_memberships_active_needing_card_count"] : 0;
