@@ -94,7 +94,8 @@ async function membershipSold(params) {
     const membershipType = params["membership_type_name"];
     const customerName = params["customer_name"];
     var activeMemberCount = params["location_memberships_active_count"];
-    activeMemberCount = activeMemberCount - params["location_memberships_active_needing_card_count"];
+    activeMemberCount = activeMemberCount - params["location_memberships_active_past_due_count"];
+
     var slackMessage = "Sweeeet a "+ membershipType + " was sold to "+ customerName +" online!  Membership count is: " +activeMemberCount+"";
 
     if(params["sold_by_user_id"]){
