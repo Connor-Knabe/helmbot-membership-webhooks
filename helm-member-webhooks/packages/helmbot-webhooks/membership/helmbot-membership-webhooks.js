@@ -53,7 +53,7 @@ async function customerFirstFloatCheckout(params) {
     var slackMessage = customMessage.getSlackMessage();
     var checkboxText = customMessage.getCheckBoxText();
     var msg = formatSlackMessage(slackMessage,checkboxText);
-    await got.post(slackUrl, {
+    await got.post(creds.slackWebhookSalesUrl, {
         json: msg
     });
     return {
@@ -92,13 +92,14 @@ async function onlineSale(params) {
 
 async function membershipSold(params) {
     const membershipType = params["membership_type_name"];
+    const customerName = params["customer_name"];
     var activeMemberCount = params["location_memberships_active_count"];
     activeMemberCount = activeMemberCount - params["location_memberships_active_needing_card_count"];
-    var slackMessage = "Sweeeet a "+ membershipType + " was sold online!  Membership count is: " +activeMemberCount+"";
+    var slackMessage = "Sweeeet a "+ membershipType + " was sold to "+ customerName +" online!  Membership count is: " +activeMemberCount+"";
 
     if(params["sold_by_user_id"]){
         const soldBy = getEmployee(params);
-        slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + "!  Membership count is: " +activeMemberCount+"";
+        slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + " to "+customerName+"!  Membership count is: " +activeMemberCount+"";
     }
 
     //make this using markdown and add new line
