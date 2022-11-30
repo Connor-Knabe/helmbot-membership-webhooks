@@ -47,4 +47,4 @@ if(eventType == "membership-range-begun"){
 
 
 
-GoogleSheets.appendToGoogleSpreadsheet.setFormattedRow(`${new Date().toDateString()} ||| ${checkoutByUserId} ||| ${customerId} ||| ${checkoutOrMembership} ||| ${membershipOrServiceId} ||| ${membershipCount} ||| ${pastReservationCount}||| ${sessionStartTime}`);
+GoogleSheets.appendToGoogleSpreadsheet.setFormattedRow(`${new Date().toDateString()} ||| ${checkoutByUserId} ||| ${customerId} ||| ${checkoutOrMembership} ||| ${membershipOrServiceId} ||| ${membershipCount} ||| ${pastReservationCount}`);
