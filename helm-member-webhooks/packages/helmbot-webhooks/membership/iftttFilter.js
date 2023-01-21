@@ -50,4 +50,7 @@ if(eventType == "membership-range-begun"){
 
 
 
-GoogleSheets.appendToGoogleSpreadsheet.setFormattedRow(`${new Date().toDateString()} ||| ${checkoutByUserId} ||| ${customerId} ||| ${checkoutOrMembership} ||| ${membershipOrServiceId} ||| ${membershipCount} ||| ${pastReservationCount} ||| ${activeMembershipCount} ||| ${sessionStartTime} ||| ${serviceTitle}`);
+GoogleSheets.appendToGoogleSpreadsheet.setFormattedRow(`${new Date().toDateString()} ||| ${checkoutByUserId} ||| ${customerId} ||| ${checkoutOrMembership} ||| ${membershipOrServiceId} ||| ${membershipCount} ||| ${pastReservationCount} ||| ${activeMembershipCount} ||| ${sessionStartTime} |||  ${serviceTitle} ||| ||| =IF(OR($C$2:$C$9244=Config!$I$3,$C$2:$C$9244=Config!$I$4,$C$2:$C$9244=Config!$I$5,$C$2:$C$9244=Config!$I$6,$C$2:$C$9244=Config!$I$7,$C$2:$C$9244=Config!$I$8,$C$2:$C$9244=Config!$I$9,$C$2:$C$9244=Config!$I$10),COUNTIF($I$2:$I$9244,INDIRECT("I"&ROW()))>1,0)`);
+
+
+
