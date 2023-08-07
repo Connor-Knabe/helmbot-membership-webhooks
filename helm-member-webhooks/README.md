@@ -19,7 +19,8 @@ git clone git@github.com:digitalocean/sample-functions-nodejs-qrcode.git
 
 ```
 # deploy the project
-> doctl serverless deploy sample-functions-nodejs-qrcode
+> doctl serverless deploy .
+
 Deploying 'sample-functions-nodejs-qrcode'
   to namespace 'fn-...'
   on host 'https://faas-...'

@@ -17,12 +17,16 @@ var slackUrl = creds.slackWebhookURL;
 async function main(params) {
     console.log('params b4',params);
 
+
+
     //for debugging to not blow up slack channel    
     if(params["checkout_by_user_id"] == "1398935" || params["sold_by_user_id"] == "1398935"){
         slackUrl = creds.slackDebugWebhookURL;
     }
-    if(params["event_type"] == "membership-range-begun" && params["membership_type_name"] != undefined && params["period_number"] == 1){
+
+    if(params["event_type"] == "membership-range-begun" && params["membership_type_name"] != undefined  && params["period_number"] == 1){
         console.log("membership sold");
+ 
         return await membershipSold(params);
     }
 
@@ -91,6 +95,7 @@ async function onlineSale(params) {
 }
 
 async function membershipSold(params) {
+
     const membershipType = params["membership_type_name"];
     const customerName = params["customer_name"];
     var activeMemberCount = params["location_memberships_active_count"];
@@ -98,10 +103,12 @@ async function membershipSold(params) {
 
     var slackMessage = "Sweeeet a "+ membershipType + " was sold to "+ customerName +" online!  Membership count is: " +activeMemberCount+"";
 
+
     if(params["sold_by_user_id"]){
         const soldBy = getEmployee(params);
         slackMessage = "Wooohooo!! "+ soldBy + " sold a "+ membershipType + " to "+customerName+"!  Membership count is: " +activeMemberCount+"";
     }
+
 
     //make this using markdown and add new line
     
