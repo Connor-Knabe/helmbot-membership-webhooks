@@ -80,9 +80,6 @@ async function onlineSale(params) {
     const customerNameAndUrl = `<${customMessage.helmbotUsersUrl}${customerId}| ${customerName}>`;
     customMessage.setCustomerNameAndUrl(customerNameAndUrl);
 
-
-    // const serviceTitle = params["service_title"];
-
     await got.post(creds.slackWebhookSalesUrl, {
         json: formatSlackMessage(customMessage.getSaleSlackMessage(),customMessage.getSaleCheckBoxText())
     });
@@ -112,7 +109,6 @@ async function membershipSold(params) {
 
     //make this using markdown and add new line
     
-
     await got.post(slackUrl, {
         json: {
             text: slackMessage
